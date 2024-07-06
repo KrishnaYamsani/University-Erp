@@ -1,0 +1,13 @@
+Database Schema:
+
+1. Student Table -  ( Roll No ),Name,Gender,Mail ID,Address,Phone number,DoB,Dept ID(FK),Date of admission
+2. Faculty - ( ID ),Name,Mail ID,Office number,Phone number,dept ID (FK)
+3. Courses - ( course ID),Course name,Credits,Contact hrs,Prerequisite course iDs,Faculty ID(FK)
+4. Department - ( id ),name,hod (faculty id)(FK),
+5. Payments - (UTR No),Date of Payment,Amount,Semno,Student ID(FK)
+6. Registration - ( student id,course id, sem no),Status
+7. Results - (student id,course id),grade
+8. Semester - ( sem no , Deptartment ID,Course ID,faculty ID),Total Number of classes
+9. Attendance - ( student ID,Course id),No. of classes
+10. Exams -  (course id ),date,slot
+11. Exam location - ( student id,course id),location ,invigilator(faculty ID)(FK)
