@@ -47,14 +47,6 @@ A robust and modular **University ERP (Enterprise Resource Planning) System** bu
 
 ---
 
-## 📊 Pre-Registration Allotment
-
-- Students rank preferred course offerings
-- Faculty Advisors trigger **automated script**
-- Courses allotted based on **GPA and preference hierarchy**
-- Conflict-free, fair registration ensured per batch
-
----
 
 ## ✅ How to Run
 
