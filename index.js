@@ -12,8 +12,7 @@ const student = require('./routes/student');
 const faculty = require('./routes/faculty');
 const general = require("./routes/public");
 const facultyadvisor = require("./routes/facultyadvisor");
-// DB connection
-const connection = "postgresql://erp_university_database_user:iut4pFpAgSMHOZ1a1pJwAKkG6jByx8uQ@dpg-d054thje5dus738tts1g-a.singapore-postgres.render.com/erp_university_database" ;
+
 
 //Utilities
 const auth = require("./utilities/auth");
