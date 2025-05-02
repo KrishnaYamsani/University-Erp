@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DASHMIN - Pre-Registration Status</title>
+    <link href="/img/favicon.ico" rel="icon">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/custom-style.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .content { padding-top: 100px; }
+        .table td, .table th { vertical-align: middle; }
+    </style>
+</head>
+
+<body>
+
+<!-- Topbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom fixed-top px-4 py-2">
+    <div class="container-fluid">
+        <div class="navbar-nav ms-auto">
+            <div class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                    <img src="/img/user.jpg" class="rounded-circle" style="width: 40px; height: 40px;">
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="#">Profile</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Layout -->
+<div class="container-xxl position-relative bg-white d-flex p-0">
+    <!-- Sidebar Start -->
+    <div class="sidebar pe-4 pb-3">
+        <nav class="navbar bg-light navbar-light">
+            <a href="/faculty/facultyprofileinfo/facultyid/<%= user.id %>" class="navbar-brand mx-4 mb-3">
+                <h3 class="text-primary"><i class="fa fa-hashtag me-2"></i>DASHMIN</h3>
+            </a>
+            <div class="d-flex align-items-center ms-4 mb-4">
+                <div class="position-relative">
+                    <img class="rounded-circle" src="/img/user.jpg" alt="Profile" style="width: 40px; height: 40px;">
+                    <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
+                </div>
+                <div class="ms-3">
+                    <h6 class="mb-0">Welcome</h6>
+                    <span>Faculty</span>
+                </div>
+            </div>
+            <div class="navbar-nav w-100">
+                <a href="/faculty/facultyprofileinfo/facultyid/<%= user.id %>" class="nav-item nav-link"><i class="fa fa-user me-2"></i>Profile</a>
+                <a href="/faculty/courses/faculty_id/<%= user.id %>" class="nav-item nav-link active"><i class="fa fa-book me-2"></i>Courses</a>
+                <a href="/faculty/allfacultydetails/facultyid/<%= user.id %>" class="nav-item nav-link"><i class="fa fa-users me-2"></i>Faculty Directory</a>
+                <% if (isFacultyAdvisor) { %>
+                    <a href="/facultyadvisor/advisestudents/facultyid/<%= user.id %>" class="nav-item nav-link"><i class="fa fa-user-tie me-2"></i>Advisory Panel</a>
+                    <a href="/facultyadvisor/releasegrades/facultyid/<%= user.id %>" class="nav-item nav-link"><i class="fa fa-bullhorn me-2"></i>Release Grades</a>
+                <% } else { %>
+                    <a class="nav-item nav-link disabled" href="#"><i class="fa fa-user-tie me-2"></i>Advisory Panel</a>
+                    <a class="nav-item nav-link disabled" href="#"><i class="fa fa-bullhorn me-2"></i>Release Grades</a>
+                <% } %>
+            </div>
+        </nav>
+    </div>
+    <!-- Sidebar End -->
+    <!-- Content Start -->
+    <div class="content w-100">
+        <div class="container-fluid px-6 py-4">
+            <h2>Pre-Registration Status - <%= course.course_name %></h2>
+
+            <% if (students.length > 0) { %>
+                <table class="table table-bordered mt-4">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Roll No</th>
+                            <th>Preference</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% students.forEach(student => { %>
+                            <tr>
+                                <td><%= student.student_name %></td>
+                                <td><%= student.roll_no %></td>
+                                <td><%= student.preference %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            <% } else { %>
+                <div class="alert alert-info mt-4">No students have opted for this course yet.</div>
+            <% } %>
+
+        </div>
+    </div>
+    <!-- Content End -->
+
+</div>
+
+<!-- JS -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/js/main.js"></script>
+
+</body>
+</html>

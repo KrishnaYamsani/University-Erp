@@ -2,38 +2,36 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>DASHMIN - Verify Student Payments</title>
+  <title>DASHMIN - Allot Pre-Registrations</title>
   <link href="/css/bootstrap.min.css" rel="stylesheet">
   <link href="/css/style.css" rel="stylesheet">
-  <style>
-    .content { padding-top: 100px; }
-  </style>
+  <style>.content { padding-top: 100px; }</style>
 </head>
 <body>
 
 <!-- Topbar Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom fixed-top px-4 py-2">
-  <div class="container-fluid">
-    <div class="navbar-nav ms-auto">
-      <div class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-          <img src="/img/user.jpg" class="rounded-circle" style="width: 40px; height: 40px;">
-        </a>
-        <ul class="dropdown-menu dropdown-menu-end">
-          <li><a class="dropdown-item" href="#">Profile</a></li>
-          <li><hr class="dropdown-divider"></li>
-          <li><a class="dropdown-item" href="/logout">Logout</a></li>
-        </ul>
-      </div>
+    <div class="container-fluid">
+        <div class="navbar-nav ms-auto">
+            <div class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                    <img src="/img/user.jpg" class="rounded-circle" style="width: 40px; height: 40px;">
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="#">Profile</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                </ul>
+            </div>
+        </div>
     </div>
-  </div>
 </nav>
 
 <!-- Layout -->
 <div class="container-xxl position-relative bg-white d-flex p-0">
 
-  <!-- Sidebar Start -->
-  <div class="sidebar pe-4 pb-3">
+    <!-- Sidebar Start -->
+<div class="sidebar pe-4 pb-3">
     <nav class="navbar bg-light navbar-light">
       <a href="/faculty/facultyprofileinfo/facultyid/<%= user.id %>" class="navbar-brand mx-4 mb-3">
         <h3 class="text-primary"><i class="fa fa-hashtag me-2"></i>DASHMIN</h3>
@@ -48,17 +46,17 @@
           <span>Faculty</span>
         </div>
       </div>
-
+  
       <div class="navbar-nav w-100">
         <a href="/faculty/facultyprofileinfo/facultyid/<%= user.id %>" class="nav-item nav-link"><i class="fa fa-user me-2"></i>Profile</a>
         <a href="/faculty/courses/faculty_id/<%= user.id %>" class="nav-item nav-link"><i class="fa fa-book me-2"></i>Courses</a>
         <a href="/faculty/allfacultydetails/facultyid/<%= user.id %>" class="nav-item nav-link"><i class="fa fa-users me-2"></i>Faculty Directory</a>
-
+  
         <% if (isFacultyAdvisor) { %>
           <hr>
           <h6 class="text-secondary ps-4 mt-2">Faculty Advisor</h6>
           <a href="/facultyadvisor/studentdetails/facultyid/<%= user.id %>" class="nav-item nav-link"><i class="fa fa-user-graduate me-2"></i>Student Details</a>
-          <a href="/facultyadvisor/verifyregistration/facultyid/<%= user.id %>" class="nav-item nav-link active"><i class="fa fa-check-circle me-2"></i>Verify Registration</a>
+          <a href="/facultyadvisor/verifyregistration/facultyid/<%= user.id %>" class="nav-item nav-link"><i class="fa fa-check-circle me-2"></i>Verify Registration</a>
           <a href="/facultyadvisor/allotpreregistration/facultyid/<%= user.id %>" class="nav-item nav-link"><i class="fa fa-tasks me-2"></i>Allot Pre-Registration</a>
         <% } %>
       </div>
@@ -67,42 +65,16 @@
   <!-- Sidebar End -->
 
   <!-- Content Start -->
-  <div class="content w-100">
-    <div class="container-fluid px-6 py-4">
-      <h2>Verify Student Payments</h2>
 
-      <form action="/facultyadvisor/verifyregistration/facultyid/<%= facultyId %>" method="POST">
-        <table class="table table-bordered">
-          <thead class="table-light">
-            <tr>
-              <th>Student Name</th>
-              <th>Semester</th>
-              <th>UTR Number</th>
-              <th>Payment Date</th>
-              <th>Amount (₹)</th>
-              <th>Mark Verified</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% students.forEach(student => { %>
-              <tr>
-                <td><%= student.name %></td>
-                <td>Semester <%= student.semester_number %> (<%= new Date(student.start_date).getFullYear() %>)</td>
-                <td><%= student.utr_number %></td>
-                <td><%= student.payment_date.toISOString().split('T')[0] %></td>
-                <td><%= student.amount %></td>
-                <td><input type="checkbox" name="verifiedPayments[]" value="<%= student.payment_id %>"></td>
-              </tr>
-            <% }); %>
-          </tbody>
-        </table>
+<div class="content w-100">
+  <div class="container-fluid px-6 py-4">
+    <h2>Allot Pre-Registered Courses</h2>
+    <p>This will allot pre-registered courses to students based on their GPA and preference.</p>
 
-        <button type="submit" class="btn btn-success">Verify Selected Payments</button>
-      </form>
-    </div>
+    <form action="/facultyadvisor/allotpreregistration/facultyid/<%= facultyId %>" method="POST">
+      <button type="submit" class="btn btn-primary">Run Allotment Process</button>
+    </form>
   </div>
-  <!-- Content End -->
-
 </div>
 
 <script src="/lib/jquery/jquery.min.js"></script>

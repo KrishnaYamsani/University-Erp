@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
-const bodyparser = require('body-parser');
+const bodyParser = require('body-parser');
+const session = require('express-session');
 const pg = require('pg');
 const jwt = require('jsonwebtoken');
 const pool = require('./utilities/db');
@@ -12,29 +13,39 @@ const faculty = require('./routes/faculty');
 const general = require("./routes/public");
 const facultyadvisor = require("./routes/facultyadvisor");
 // DB connection
-const connection = "postgres://erp_nb6d_user:gTHSNkhJsqaXHkDUSTuEhNzF3LT7OQVn@dpg-cocnl821hbls73cuifog-a.oregon-postgres.render.com/erp_nb6d" ;
+const connection = "postgresql://erp_university_database_user:iut4pFpAgSMHOZ1a1pJwAKkG6jByx8uQ@dpg-d054thje5dus738tts1g-a.singapore-postgres.render.com/erp_university_database" ;
 
 //Utilities
 const auth = require("./utilities/auth");
-
+app.use(session({
+    secret: 'your-secret-key', // Change this to a secure secret
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false } // Set secure: true if you're using HTTPS
+  }));
 app.use(express.static('public'))
 // Body parser middleware
-app.use(bodyparser.json());
-app.use(bodyparser.urlencoded({extended:true}));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:true}));
 
 //templates
 app.set('views','./views');
 app.set('view engine', 'ejs');
 
 app.get('/',(req,res) => {
-    res.render('index');
+    const error = req.query.error || null;
+    res.render('index',{error});
 })
 
-//app.use('/',bodyparser.json(),auth.authenticateUserWithRole);
-//app.use('/',)
-//app.use('/')
+// app.post('/',(req,res) => {
+//     console.log(req.body);
+//     res.redirect('/');
+// })
+
+app.post('/', bodyParser.urlencoded({ extended: false }), auth.authenticateUserWithRole);
+app.get('/logout',bodyParser.urlencoded({ extended: false }), auth.logoutUser);
 app.use('/student',student);
-app.use('/faculty',bodyparser.json(),faculty)
+app.use('/faculty',bodyParser.json(),faculty)
 app.use('/public',general);
 app.use('/facultyadvisor',facultyadvisor);
 

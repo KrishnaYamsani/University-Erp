@@ -1,124 +1,161 @@
 require('dotenv').config();
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 const pool = require("./db");
 
-
-function generateToken (user) {
-    return jwt.sign(user,process.env.ACCESS_TOKEN_SECRET,{expiresIn : '60m'});
+function generateToken(user) {
+    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '60m' });
 }
 
-function authenticateToken(req,res,next){
+function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
 
-    if(!token){
+    if (!token) {
         return res.sendStatus(401);
     }
 
-    jwt.verify(token,process.env.ACCESS_TOKEN_SECRET, (err,user) => {
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
         if (err) return res.sendStatus(403);
         req.user = user;
-        next()
-    })
-}
-
-
-async function authenticateUserWithRole (req,res,next) {
-    const user = req.body.user;
-    const password = req.body.password;
-    const role = req.body.role;
-console.log(req.body);
-    
-
-    const result = await pool.query(`SELECT PASSWORD FROM AUTHENTICATION WHERE USERNAME=$1 AND ROLE=$2`,[user,role]);
-                            console.log(result.rows);
-
-    if(result === password){
-       if(role === 'faculty'){
-        res.redirect('/faculty/facultydetails/facultyid/'+user);
-       }else if(role === 'facultyadvisor'){
-        res.redirect('/facultyadvisor/facultydetails/facultyid/'+user);
-       }else if(role === 'student'){
-        res.redirect('/student/profileinfo/studentId/' + user)
-       }
-    }else{
-        res.redirect("/");
-    }
-}
-
-async function authenticateUserWithRoleFaculty (req,res,next) {
-    const user = req.body.user;
-    const password = req.body.password;
-    const role = req.body.role;
-
-    if(role!='faculty'){
-        res.redirect("/");
-    }
-
-    const result = await pool.query("SELECT PASSWORD FROM AUTHENTICATION WHERE USERNAME=$1 AND ROLE=$2",[user,role])
-                             .then((result) => result.rows[0].password);
-
-    if(result === password){
         next();
-    }else{
-        res.redirect("/");
-    }
-}
-async function authenticateUserWithRoleFaculty (req,res,next) {
-    const user = req.body.user;
-    const password = req.body.password;
-    const role = req.body.role;
-
-    if(role!='faculty'){
-        res.redirect("/");
-    }
-
-    const result = await pool.query("SELECT PASSWORD FROM AUTHENTICATION WHERE USERNAME=$1 AND ROLE=$2",[user,role])
-                             .then((result) => result.rows[0].password);
-
-    if(result === password){
-        next();
-    }else{
-        res.redirect("/");
-    }
+    });
 }
 
-async function authenticateUserWithRoleFacultyAdvisor (req,res,next) {
-    const user = req.body.user;
-    const password = req.body.password;
-    const role = req.body.role;
+async function authenticateUserWithRole(req, res, next) {
+    const { user, password, role } = req.body;
 
-    if(role!='facultyadvisor'){
-        res.redirect("/");
-    }
+    try {
+        // Fetch user info from Users table
+        const result = await pool.query(
+            "SELECT password, role, is_faculty_advisor FROM Users WHERE user_id = $1 AND role = $2",
+            [user, role]
+        );
 
-    const result = await pool.query("SELECT PASSWORD FROM AUTHENTICATION WHERE USERNAME=$1 AND ROLE=$2",[user,role])
-                             .then((result) => result.rows[0].password);
+        if (result.rowCount === 0) {
+            return res.redirect(`/?error=Invalid username or role combination`);
+        }
 
-    if(result === password){
-        next();
-    }else{
-        res.redirect("/");
-    }
-}
+        const dbUser = result.rows[0];
 
-async function authenticateUserWithRoleStudent (req,res,next) {
-    const user = req.body.user;
-    const password = req.body.password;
-    const role = req.body.role;
+        // Compare hashed password using bcrypt
+        const match = await bcrypt.compare(password, dbUser.password);
+        if (!match) {
+            return res.redirect(`/?error=Incorrect password`);
+        }
 
-    if(role!='student'){
-        res.redirect("/");
-    }
+        const userPayload = {
+            user_id: user,
+            role: dbUser.role,
+            is_faculty_advisor: dbUser.is_faculty_advisor,
+        };
 
-    const result = await pool.query("SELECT PASSWORD FROM AUTHENTICATION WHERE USERNAME=$1 AND ROLE=$2",[user,role])
-                             .then((result) => result.rows[0].password);
+        const token = generateToken(userPayload);
+        res.cookie('token', token, { httpOnly: true });
 
-    if(result === password){
-        next();
-    }else{
-        res.redirect("/");
+        // Redirect based on role
+        if (role === 'student') {
+            return res.redirect(`/student/profileinfo/studentId/${user}`);
+        } else if (role === 'faculty') {
+            return res.redirect(`/faculty/facultyprofileinfo/facultyid/${user}`);
+        } else {
+            return res.redirect('/'); // fallback
+        }
+    } catch (err) {
+        console.error("Login error:", err);
+        return res.status(500).send("Server error");
     }
 }
 
-module.exports = {generateToken,authenticateToken,authenticateUserWithRoleFaculty,authenticateUserWithRoleFacultyAdvisor,authenticateUserWithRoleStudent,authenticateUserWithRole};
+function logoutUser(req, res) {
+    res.clearCookie('token'); // Remove the JWT token cookie
+    res.redirect('/');        // Redirect to home page
+}
+
+module.exports = {
+    generateToken,
+    authenticateToken,
+    authenticateUserWithRole,
+    logoutUser,
+};
+
+
+
+// async function authenticateUserWithRoleFaculty (req,res,next) {
+//     const user = req.body.user;
+//     const password = req.body.password;
+//     const role = req.body.role;
+
+//     if(role!='faculty'){
+//         res.redirect("/");
+//     }
+
+//     const result = await pool.query("SELECT PASSWORD FROM AUTHENTICATION WHERE USERNAME=$1 AND ROLE=$2",[user,role])
+//                              .then((result) => result.rows[0].password);
+
+//     if(result === password){
+//         next();
+//     }else{
+//         res.redirect("/");
+//     }
+// }
+
+
+// async function authenticateUserWithRoleFaculty (req,res,next) {
+//     const user = req.body.user;
+//     const password = req.body.password;
+//     const role = req.body.role;
+
+//     if(role!='faculty'){
+//         res.redirect("/");
+//     }
+
+//     const result = await pool.query("SELECT PASSWORD FROM AUTHENTICATION WHERE USERNAME=$1 AND ROLE=$2",[user,role])
+//                              .then((result) => result.rows[0].password);
+
+//     if(result === password){
+//         next();
+//     }else{
+//         res.redirect("/");
+//     }
+// }
+
+// async function authenticateUserWithRoleFacultyAdvisor (req,res,next) {
+//     const user = req.body.user;
+//     const password = req.body.password;
+//     const role = req.body.role;
+
+//     if(role!='facultyadvisor'){
+//         res.redirect("/");
+//     }
+
+//     const result = await pool.query("SELECT PASSWORD FROM AUTHENTICATION WHERE USERNAME=$1 AND ROLE=$2",[user,role])
+//                              .then((result) => result.rows[0].password);
+
+//     if(result === password){
+//         next();
+//     }else{
+//         res.redirect("/");
+//     }
+// }
+
+// async function authenticateUserWithRoleStudent (req,res,next) {
+//     const user = req.body.user;
+//     const password = req.body.password;
+//     const role = req.body.role;
+
+//     if(role!='student'){
+//         res.redirect("/");
+//     }
+
+//     const result = await pool.query("SELECT PASSWORD FROM AUTHENTICATION WHERE USERNAME=$1 AND ROLE=$2",[user,role])
+//                              .then((result) => result.rows[0].password);
+
+//     if(result === password){
+//         next();
+//     }else{
+//         res.redirect("/");
+//     }
+// }
+
+// module.exports = {generateToken,authenticateToken,authenticateUserWithRole};

@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <title>DASHMIN - Student Registration</title>
+    <title>DASHMIN - Pre-Registration</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
     <!-- Favicon -->
@@ -21,22 +20,18 @@
         .content {
             padding-top: 80px;
         }
-
-        .registration-form {
+        .preregistration-form {
             background: #fff;
             padding: 30px;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
         }
-
-        .registration-form h2 {
+        .preregistration-form h2 {
             margin-bottom: 20px;
         }
-
         .form-group label {
             font-weight: 500;
         }
-
         .courses-table th, .courses-table td {
             vertical-align: middle;
         }
@@ -51,34 +46,16 @@
         <!-- Content -->
         <div class="content w-100">
             <div class="container-fluid px-6 py-4">
-                <div class="registration-form">
-                    <h2>Registration Form</h2>
-                    <form action="/student/registration/studentId/<%= studentId %>" method="POST">
-                        <div class="form-group mb-3">
-                            <label for="UTRNo">UTR No:</label>
-                            <input type="text" id="UTRNo" name="UTRNo" class="form-control" required>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="dateOfPayment">Date of Payment:</label>
-                            <input type="date" id="dateOfPayment" name="dateOfPayment" class="form-control" required>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="amount">Amount:</label>
-                            <input type="number" id="amount" name="amount" class="form-control" required>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="semNo">Semester No:</label>
-                            <input type="number" id="semNo" name="semNo" class="form-control" required>
-                        </div>
-
-                        <!-- Course Offerings -->
-                        <h5 class="mt-4 mb-3">Available Courses</h5>
+                <div class="preregistration-form">
+                    <h2>Pre-Registration Form</h2>
+                    <form action="/student/preregistration/studentId/<%= studentId %>" method="POST">
+                        <h5 class="mb-3">Choose your preferences</h5>
                         <table class="table table-bordered courses-table">
                             <thead class="table-light">
                                 <tr>
                                     <th>Course</th>
                                     <th>Faculty</th>
-                                    <th>Select</th>
+                                    <th>Preference (1,2,3...)</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -86,12 +63,16 @@
                                     <tr>
                                         <td><%= course.course_name %></td>
                                         <td><%= course.faculty_name %></td>
-                                        <td><input type="checkbox" name="courses" value="<%= course.offering_id %>"></td>
+                                        <td>
+                                            <input type="number" min="1" max="<%= offerings.length %>"
+                                                name="<%= course.offering_id %>"
+                                                class="form-control" required>
+                                        </td>
                                     </tr>
-                                <% }) %>
+                                <% }); %>
                             </tbody>
                         </table>
-                        <button type="submit" class="btn btn-primary">Register</button>
+                        <button type="submit" class="btn btn-primary">Submit Preferences</button>
                     </form>
                 </div>
             </div>

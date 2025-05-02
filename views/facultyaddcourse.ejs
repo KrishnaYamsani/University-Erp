@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DASHMIN - Add New Course</title>
+  <link href="/img/favicon.ico" rel="icon">
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/css/style.css" rel="stylesheet">
+  <link href="/css/custom-style.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+  <style>
+    .content { padding-top: 100px; }
+    .form-section { background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.05); }
+  </style>
+</head>
+
+<body>
+
+<!-- Top Bar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom fixed-top px-4 py-2">
+  <div class="container-fluid">
+    <div class="navbar-nav ms-auto">
+      <div class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+          <img src="/img/user.jpg" alt="Profile" class="rounded-circle" style="width: 40px; height: 40px;">
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li><a class="dropdown-item" href="#">Profile</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="/logout">Logout</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="container-xxl position-relative bg-white d-flex p-0">
+
+  <!-- Sidebar -->
+  <div class="sidebar pe-4 pb-3">
+    <nav class="navbar bg-light navbar-light">
+      <a href="/faculty/facultyprofileinfo/facultyid/<%= user.id %>" class="navbar-brand mx-4 mb-3">
+        <h3 class="text-primary"><i class="fa fa-hashtag me-2"></i>DASHMIN</h3>
+      </a>
+      <div class="d-flex align-items-center ms-4 mb-4">
+        <div class="position-relative">
+          <img class="rounded-circle" src="/img/user.jpg" alt="Profile" style="width: 40px; height: 40px;">
+          <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
+        </div>
+        <div class="ms-3">
+          <h6 class="mb-0">Welcome</h6>
+          <span>Faculty</span>
+        </div>
+      </div>
+
+      <div class="navbar-nav w-100">
+        <a href="/faculty/facultyprofileinfo/facultyid/<%= user.id %>" class="nav-item nav-link"><i class="fa fa-user me-2"></i>Profile</a>
+        <a href="/faculty/courses/faculty_id/<%= user.id %>" class="nav-item nav-link active"><i class="fa fa-book me-2"></i>Courses</a>
+        <a href="/faculty/allfacultydetails/facultyid/<%= user.id %>" class="nav-item nav-link"><i class="fa fa-users me-2"></i>Faculty Directory</a>
+        <% if (isFacultyAdvisor) { %>
+            <a href="/facultyadvisor/advisestudents/facultyid/<%= user.id %>" class="nav-item nav-link"><i class="fa fa-user-tie me-2"></i>Advisory Panel</a>
+            <a href="/facultyadvisor/releasegrades/facultyid/<%= user.id %>" class="nav-item nav-link"><i class="fa fa-bullhorn me-2"></i>Release Grades</a>
+        <% } else { %>
+            <a class="nav-item nav-link disabled" href="#"><i class="fa fa-user-tie me-2"></i>Advisory Panel</a>
+            <a class="nav-item nav-link disabled" href="#"><i class="fa fa-bullhorn me-2"></i>Release Grades</a>
+        <% } %>
+    </div>
+    </nav>
+  </div>
+
+  <!-- Content -->
+  <div class="content w-100">
+    <div class="container-fluid px-6 py-4">
+      <div class="form-section">
+        <h2 class="mb-4">Add a New Course Offering</h2>
+
+        <form action="/faculty/addcourse/facultyid/<%= facultyId %>" method="POST">
+
+          <!-- Existing Course -->
+          <div class="mb-4">
+            <label>Select Existing Course (optional):</label>
+            <select name="course_id" class="form-control">
+              <option value="">-- Create New Course --</option>
+              <% availableCourses.forEach(course => { %>
+                <option value="<%= course.id %>"><%= course.name %> (Credits: <%= course.credits %>)</option>
+              <% }); %>
+            </select>
+          </div>
+
+          <h5 class="mt-4">Or Add New Course Details:</h5>
+
+          <!-- New Course Fields -->
+          <div class="mb-3">
+            <label>New Course Name:</label>
+            <input type="text" name="new_course_name" class="form-control" placeholder="Enter course name">
+          </div>
+
+          <div class="mb-3">
+            <label>Credits:</label>
+            <input type="number" name="new_course_credits" class="form-control" placeholder="e.g., 3">
+          </div>
+
+          <div class="mb-3">
+            <label>Contact Hours:</label>
+            <input type="number" name="new_course_contact_hours" class="form-control" placeholder="e.g., 40">
+          </div>
+
+          <!-- Semester -->
+          <div class="mb-3">
+            <label>Semester:</label>
+            <select name="semester_id" class="form-control" required>
+              <% semesters.forEach(sem => { %>
+                <option value="<%= sem.id %>">Semester <%= sem.semester_number %> (<%= sem.start_date %> - <%= sem.end_date %>)</option>
+              <% }); %>
+            </select>
+          </div>
+
+          <!-- Batch Year -->
+          <div class="mb-3">
+            <label>Batch Year:</label>
+            <input type="number" name="batch_year" class="form-control" required>
+          </div>
+
+          <!-- Grading Policy -->
+          <div class="mb-3">
+            <label>Grading Policy (JSON format):</label>
+            <textarea name="grading_criteria" class="form-control" rows="4" required>
+{
+  "quiz": 20,
+  "midsem": 30,
+  "endsem": 50
+}
+            </textarea>
+          </div>
+
+          <!-- Attendance Policy -->
+          <div class="mb-3">
+            <label>Attendance Policy:</label>
+            <textarea name="attendance_policy" class="form-control" rows="3" required>Minimum 75% attendance required.</textarea>
+          </div>
+
+          <button type="submit" class="btn btn-success">Create Course Offering</button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/js/main.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DASHMIN - Pre-Registration Status</title>
+    <link href="/img/favicon.ico" rel="icon">
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/custom-style.css" rel="stylesheet">
+    <style>
+        .content { padding-top: 80px; }
+        .allocation-section {
+            background: #fff; padding: 30px; border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+
+<body>
+
+    <%- include('partials/student_header', { studentId }) %>
+    <div class="container-xxl position-relative bg-white d-flex p-0">
+      <%- include('partials/student_sidebar', { studentId, activePage}) %>
+
+    <!-- Content -->
+    <div class="content w-100">
+        <div class="container-fluid px-6 py-4">
+            <div class="allocation-section">
+                <h2>Allocated Courses</h2>
+
+                <% if (allocatedCourses.length === 0) { %>
+                    <p class="text-danger">No course allocation yet! Please wait for admin to process pre-registration.</p>
+                <% } else { %>
+                    <table class="table table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Course</th>
+                                <th>Faculty</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% allocatedCourses.forEach(course => { %>
+                                <tr>
+                                    <td><%= course.course_name %></td>
+                                    <td><%= course.faculty_name %></td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                <% } %>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/student_scripts') %>
+
+</body>
+</html>

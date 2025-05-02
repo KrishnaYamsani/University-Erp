@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>DASHMIN - Registration Status</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <link href="/img/favicon.ico" rel="icon">
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/custom-style.css" rel="stylesheet">
+
+    <style>
+        .content {
+            padding-top: 80px;
+        }
+        .summary-card {
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+        .summary-card h2, .summary-card h5 {
+            margin-bottom: 20px;
+        }
+        .table th, .table td {
+            vertical-align: middle;
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('partials/student_header', { studentId }) %>
+    <div class="container-xxl position-relative bg-white d-flex p-0">
+      <%- include('partials/student_sidebar', { studentId, activePage}) %>
+
+        <!-- Content -->
+        <div class="content w-100">
+            <div class="container-fluid px-6 py-4">
+                <div class="summary-card">
+                    <h2>Registration Summary</h2>
+
+                    <h5>Payment Information</h5>
+                    <ul class="list-group mb-4">
+                        <li class="list-group-item"><strong>UTR Number:</strong> <%= payment.utr_number %></li>
+                        <li class="list-group-item"><strong>Payment Date:</strong> <%= payment.payment_date.toISOString().split('T')[0] %></li>
+                        <li class="list-group-item"><strong>Amount:</strong> ₹<%= payment.amount %></li>
+                        <li class="list-group-item"><strong>Semester:</strong> <%= payment.semester_id %></li>
+                        <li class="list-group-item"><strong>Status:</strong> <%= payment.verified ? "Verified" : "Pending Verification" %></li>
+                    </ul>
+
+                    <h5>Registered Courses</h5>
+                    <table class="table table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Course Name</th>
+                                <th>Faculty</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% courses.forEach(course => { %>
+                                <tr>
+                                    <td><%= course.course_name %></td>
+                                    <td><%= course.faculty_name %></td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+
+                    <a href="/student/profileinfo/studentId/<%= studentId %>" class="btn btn-success mt-4">Go to Profile</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS -->
+    <%- include('partials/student_scripts') %>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>DASHMIN - Student Payments</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <!-- Favicon -->
+    <link href="/img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/custom-style.css" rel="stylesheet">
+
+    <style>
+        .content {
+            padding-top: 80px;
+        }
+
+        .payment-form {
+            margin-top: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('partials/student_header', { studentId }) %>
+    <div class="container-xxl position-relative bg-white d-flex p-0">
+      <%- include('partials/student_sidebar', { studentId, activePage}) %>
+
+        <!-- Content Start -->
+        <div class="content">
+            <div class="container-fluid px-6 py-4">
+                <!-- Payment History Section -->
+                <h2 class="mb-4">Payment History</h2>
+                <% if (!payments || payments.length === 0) { %>
+                    <p>No payment records available yet.</p>
+                <% } else { %>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>UTR Number</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% payments.forEach(payment => { %>
+                                    <tr>
+                                        <td><%= payment.payment_date %></td>
+                                        <td>₹<%= payment.amount %></td>
+                                        <td><%= payment.utr_number %></td>
+                                        <td>
+                                            <% if (payment.verified) { %>
+                                                <span class="badge bg-success">Verified</span>
+                                            <% } else { %>
+                                                <span class="badge bg-warning">Pending</span>
+                                            <% } %>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                <% } %>
+
+                <!-- New Payment Form -->
+                <div class="payment-form">
+                    <h3 class="mb-4">Add New Payment</h3>
+                    <form action="/student/payments/studentId/<%= studentId %>" method="POST">
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <label for="utr_number" class="form-label">UTR Number</label>
+                                <input type="text" class="form-control" id="utr_number" name="utr_number" required>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <label for="payment_date" class="form-label">Payment Date</label>
+                                <input type="date" class="form-control" id="payment_date" name="payment_date" required>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <label for="amount" class="form-label">Amount</label>
+                                <input type="number" class="form-control" id="amount" name="amount" required>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <label for="semester_id" class="form-label">Semester</label>
+                                <select class="form-select" id="semester_id" name="semester_id" required>
+                                    <option value="" disabled selected>Select Semester</option>
+                                    <option value="1">Semester 1</option>
+                                    <option value="2">Semester 2</option>
+                                    <option value="3">Semester 3</option>
+                                    <option value="4">Semester 4</option>
+                                    <option value="5">Semester 5</option>
+                                    <option value="6">Semester 6</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Payment</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Content End -->
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <%- include('partials/student_scripts') %>
+</body>
+
+</html>

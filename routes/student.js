@@ -1,15 +1,22 @@
-const express = require("express");
+// student.js
+const express = require('express');
 const router = express.Router();
+const studentController = require('../routehandlers/studentRouterHandler');
 
-//handlers
-const studentHandler = require('../routehandlers/studentRouterHandler')
+router.get('/profileinfo/studentId/:studentId', studentController.getStudentProfile);
+router.get('/grades/studentId/:studentId', studentController.getStudentGrades);
+router.get('/attendance/studentId/:studentId', studentController.getStudentAttendance);
+router.get('/examdetails/studentId/:studentId', studentController.getStudentExams);
+router.get('/coursedetails/studentId/:studentId', studentController.getStudentCourses);
+router.get('/registration/studentId/:studentId', studentController.getStudentRegistration);
+router.post('/registration/studentId/:studentId', studentController.postStudentRegistration);
+router.post('/payment/studentId/:studentId', studentController.postStudentPayment);
+router.get('/registration/status/studentId/:studentId', studentController.getStudentRegistrationStatus);
+router.get('/payments/studentId/:studentId', studentController.getStudentPayments);
+router.get('/faculties/studentId/:studentId', studentController.getAllFaculties);
+// Pre-Registration
+router.get('/preregistration/studentId/:studentId', studentController.getStudentPreRegistration);
+router.post('/preregistration/studentId/:studentId', studentController.submitPreRegistration);
+router.get('/preregistration/status/studentId/:studentId', studentController.getPreRegistrationStatus);
 
-router.get('/profileinfo/studentId/:id',studentHandler.studentDetails);// send studentdetails page
-router.get('/grades/studentId/:id',studentHandler.studentGrades);// send gradedetails page
-router.get('/attendance/studentId/:id',studentHandler.studentAttendance);// send attendance details
-router.get('/examdetails/studentId/:id',studentHandler.studentExamDetails);// send exams location page
-router.get('/coursedetails/studentId/:id',studentHandler.studentCourseDetails);// send course details
-router.post('/registration/studentId/:id',studentHandler.StudentPostPaymentDetails);
-router.get('/registration/studentId/:id',studentHandler.StudentRegistartionPage);
-
-module.exports = router ;
+module.exports = router;

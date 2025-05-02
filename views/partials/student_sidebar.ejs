@@ -1,0 +1,49 @@
+<!-- Sidebar Start -->
+<div class="sidebar pe-4 pb-3">
+    <nav class="navbar bg-light navbar-light">
+      <a href="/" class="navbar-brand mx-4 mb-3">
+        <h3 class="text-primary"><i class="fa fa-hashtag me-2"></i>DASHMIN</h3>
+      </a>
+      <div class="d-flex align-items-center ms-4 mb-4">
+        <div class="position-relative">
+          <img class="rounded-circle" src="/img/user.jpg" alt="" style="width: 40px; height: 40px" />
+          <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
+        </div>
+        <div class="ms-3">
+          <h6 class="mb-0"></h6>
+          <span>Student</span>
+        </div>
+      </div>
+      <div class="navbar-nav w-100">
+        <a href="/student/profileinfo/studentId/<%= studentId %>" class="nav-item nav-link <%= activePage === 'profile' ? 'active' : '' %>">
+          <i class="fa fa-user me-2"></i>Profile
+        </a>
+        <a href="/student/grades/studentId/<%= studentId %>" class="nav-item nav-link <%= activePage === 'grades' ? 'active' : '' %>">
+          <i class="fa fa-chart-bar me-2"></i>Grades
+        </a>
+        <a href="/student/coursedetails/studentId/<%= studentId %>" class="nav-item nav-link <%= activePage === 'courses' ? 'active' : '' %>">
+          <i class="fa fa-book me-2"></i>Courses
+        </a>
+        <a href="/student/registration/studentId/<%= studentId %>" class="nav-item nav-link <%= activePage === 'registration' ? 'active' : '' %>">
+          <i class="fa fa-clipboard-list me-2"></i>Registration
+        </a>
+        <a href="/student/attendance/studentId/<%= studentId %>" class="nav-item nav-link <%= activePage === 'attendance' ? 'active' : '' %>">
+          <i class="fa fa-calendar-check me-2"></i>Attendance
+        </a>
+        <a href="/student/examdetails/studentId/<%= studentId %>" class="nav-item nav-link <%= activePage === 'examdetails' ? 'active' : '' %>">
+          <i class="fa fa-file-alt me-2"></i>Exam Details
+        </a>
+        <a href="/student/payments/studentId/<%= studentId %>" class="nav-item nav-link <%= activePage === 'payments' ? 'active' : '' %>">
+          <i class="fa fa-credit-card me-2"></i>Payments
+        </a>
+        <a href="/student/faculties/studentId/<%= studentId %>" class="nav-item nav-link <%= activePage === 'faculties' ? 'active' : '' %>">
+          <i class="fa fa-users me-2"></i>Faculties
+        </a>
+        <a href="/student/preregistration/studentId/<%= studentId %>" class="nav-item nav-link <%= activePage === 'preregistration' ? 'active' : '' %>">
+          <i class="fa fa-tasks me-2"></i>Pre-Registration
+        </a>
+      </div>
+    </nav>
+  </div>
+  <!-- Sidebar End -->
+  

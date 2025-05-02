@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
-    <title>DASHMIN - Faculty Dashboard</title>
+    <title>DASHMIN - View Grades</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -39,36 +38,28 @@
         }
     </style>
 </head>
-
 <body>
-    <!-- Top Bar Start -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom border-2 border-gray px-4 py-2 fixed-top">
+    <!-- Topbar Start -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom fixed-top px-4 py-2">
         <div class="container-fluid">
             <div class="navbar-nav ms-auto">
                 <div class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="img/user.jpg" alt="Profile" class="rounded-circle" style="width: 40px; height: 40px;">
+                        <img src="/img/user.jpg" alt="Profile" class="rounded-circle" style="width: 40px; height: 40px;">
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="#">Profile</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#">Logout</a></li>
+                        <li><a class="dropdown-item" href="/logout">Logout</a></li>
                     </ul>
                 </div>
             </div>
         </div>
     </nav>
-    <!-- Top Bar End -->
-    
-    <!-- Greeting Message Start -->
-    <div class="container-fluid mt-5 pt-2 greeting-message">
-        <h5 class="text-center"></h5>
-    </div>
-    <!-- Greeting Message End -->
+    <!-- Topbar End -->
 
     <div class="container-xxl position-relative bg-white d-flex p-0">
-  
-        <!-- Sidebar Start -->
+       <!-- Sidebar Start -->
     <div class="sidebar pe-4 pb-3">
         <nav class="navbar bg-light navbar-light">
             <a href="/faculty/facultyprofileinfo/facultyid/<%= user.id %>" class="navbar-brand mx-4 mb-3">
@@ -101,31 +92,32 @@
     <!-- Sidebar End -->
 
         <!-- Content Start -->
-        <div class="content">
-            <!-- Attendance View Table -->
+        <div class="content w-100">
             <div class="container-fluid px-6 py-4">
-                <h3>Attendance View</h3>
+                <h3>View Grades</h3>
                 <div class="table-responsive">
                     <table class="table table-bordered">
-                        <thead>
+                        <thead class="table-light">
                             <tr>
                                 <th>Student ID</th>
                                 <th>Student Name</th>
-                                <th>Total Classes</th>
-                                <th>Classes Attended</th>
-                                <th>Percentage Attendance</th>
+                                <th>Grade</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <% attendanceData.forEach(record => { %>
+                            <% if (grades.length > 0) { %>
+                                <% grades.forEach(grade => { %>
+                                    <tr>
+                                        <td><%= grade.student_id %></td>
+                                        <td><%= grade.student_name %></td>
+                                        <td><%= grade.grade %></td>
+                                    </tr>
+                                <% }); %>
+                            <% } else { %>
                                 <tr>
-                                    <td><%= record.student_id %></td>
-                                    <td><%= record.student_name %></td>
-                                    <td><%= record.total_classes %></td>
-                                    <td><%= record.classes_attended %></td>
-                                    <td><%= (record.classes_attended * 100)/record.total_classes %></td>
+                                    <td colspan="3" class="text-center">No grades available for this course.</td>
                                 </tr>
-                            <% }); %>
+                            <% } %>
                         </tbody>
                     </table>
                 </div>
@@ -133,17 +125,10 @@
         </div>
         <!-- Content End -->
     </div>
-    
-    <!-- JavaScript Libraries -->
-    <script src="lib/jquery/jquery.min.js"></script>
-    <script src="lib/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-    <script src="lib/tempusdominus/js/moment.min.js"></script>
-    <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
-    <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
-    <!-- Template Javascript -->
-    <script src="js/main.js"></script>
+    <!-- JS -->
+    <script src="/lib/jquery/jquery.min.js"></script>
+    <script src="/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/main.js"></script>
 </body>
-
 </html>
